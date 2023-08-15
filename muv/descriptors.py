@@ -34,8 +34,6 @@ class MUVDescriptors(object):
         mol : Mol
             Molecule.
         """
-        d = []
-
         # prep
         mol = Chem.AddHs(mol)
         Chem.AssignStereochemistry(mol, cleanIt=True, force=True,
@@ -46,7 +44,7 @@ class MUVDescriptors(object):
                  'O': 8, 'P': 15, 'S': 16}
         counts = self.atom_counts(mol)
         total = mol.GetNumAtoms()
-        d.append(total)
+        d = [total]
         heavy = mol.GetNumHeavyAtoms()
         d.append(heavy)
         for name in sorted(atoms.keys()):
@@ -65,12 +63,12 @@ class MUVDescriptors(object):
         c_log_p, _ = AllChem.CalcCrippenDescriptors(mol)
         d.append(c_log_p)
 
-        # number of chiral centers
-        n_chiral = 0
-        for atom in mol.GetAtoms():
-            if (atom.GetChiralTag() == ChiralType.CHI_TETRAHEDRAL_CW or
-                    atom.GetChiralTag() == ChiralType.CHI_TETRAHEDRAL_CCW):
-                n_chiral += 1
+        n_chiral = sum(
+            1
+            for atom in mol.GetAtoms()
+            if atom.GetChiralTag()
+            in [ChiralType.CHI_TETRAHEDRAL_CW, ChiralType.CHI_TETRAHEDRAL_CCW]
+        )
         d.append(n_chiral)
 
         # number of ring systems (not the number of rings)

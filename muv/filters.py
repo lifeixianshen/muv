@@ -34,8 +34,7 @@ class EmbeddingFilter(object):
             examples in set B (second axis).
         """
         cut = np.sort(d, axis=1)[:, self.n_neighbors - 1]
-        keep = np.where(cut <= self.threshold)[0]
-        return keep
+        return np.where(cut <= self.threshold)[0]
 
 
 class PropertyFilter(object):
@@ -105,8 +104,7 @@ class PropertyFilter(object):
                 elif not self.allow_max and prop >= self.max_value:
                     continue
             keep.append(mol)
-        keep = np.asarray(keep)
-        return keep
+        return np.asarray(keep)
 
 
 class CompoundFilter(object):
@@ -148,8 +146,7 @@ class CompoundFilter(object):
             identifer = self.get_identifier(mol)
             if identifer not in self.exclude:
                 keep.append(mol)
-        keep = np.asarray(keep)
-        return keep
+        return np.asarray(keep)
 
     def get_identifier(self, mol):
         """
@@ -205,5 +202,4 @@ class SmilesFilter(CompoundFilter):
         mol : Mol
             Molecule.
         """
-        smiles = Chem.MolToSmiles(mol, isomericSmiles=True, canonical=True)
-        return smiles
+        return Chem.MolToSmiles(mol, isomericSmiles=True, canonical=True)
