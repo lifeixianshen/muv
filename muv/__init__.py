@@ -44,9 +44,7 @@ class MUV(object):
             Molecules.
         """
         describer = MUVDescriptors()
-        x = []
-        for mol in mols:
-            x.append(describer(mol))
+        x = [describer(mol) for mol in mols]
         x = np.asarray(x)
         return x
 

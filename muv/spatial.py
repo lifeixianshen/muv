@@ -47,8 +47,7 @@ def spread(d, t):
     if is_valid_dm(d):
         d = np.copy(d)
         d[np.diag_indices_from(d)] = np.inf
-    s = np.mean(np.any(d < t, axis=1))
-    return s
+    return np.mean(np.any(d < t, axis=1))
 
 
 def sum_of_spreads(d, coeff, min_t=0, max_t=3, step=None, diff=None):
@@ -78,9 +77,8 @@ def sum_of_spreads(d, coeff, min_t=0, max_t=3, step=None, diff=None):
         step = max_t / 500.
     n_steps = int((max_t - min_t) / step)
     thresholds = coeff * np.linspace(min_t, max_t, n_steps)
-    if diff is not None:
-        ss = np.sum([spread(d, t) - spread(diff, t)
-                     for t in thresholds])
-    else:
-        ss = np.sum([spread(d, t) for t in thresholds])
-    return ss
+    return (
+        np.sum([spread(d, t) - spread(diff, t) for t in thresholds])
+        if diff is not None
+        else np.sum([spread(d, t) for t in thresholds])
+    )
